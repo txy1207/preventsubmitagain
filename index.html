@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>防止重复提交</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+        
+        .container {
+            position: relative;
+            width: 400px;
+            margin: auto;
+        }
+        
+        .content {
+            width: 300px;
+            height: 400px;
+            border: 1px solid #09f;
+        }
+        
+        #mask {
+            position: absolute;
+            top: 0;
+            width: 302px;
+            height: 402px;
+            opacity: 0.5;
+            display: none;
+        }
+        ul{
+            margin-left: 5px;
+            list-style: none;
+        }
+    </style>
+
+
+</head>
+
+<body>
+<script src="js/ajax.js"></script>
+    <div class="container">
+        <div class="content" id="con">请求列车人员信息</div>
+        <div id="mask"><img src="img/bg.gif" width="302" height="402" alt=""></div>
+        <input type="button" value="提交" id="btn">
+    </div>
+</body>
+<script>
+
+        var mask = document.getElementById("mask");
+        var btn = document.getElementById("btn");
+        var con = document.getElementById("con");
+        btn.onclick = function() {
+            con.innerText = "";
+            btn.disabled = true;
+            mask.style.display = "block";
+            function af(){
+            ajax({
+                url: "data.php",
+                dataType: "json"
+            }).then(data => {
+                let  str = "<ul>";
+                for (let value of data.data) {
+                    str += `<li>id：${value.id},姓名：${value.name},年龄：${value.age},性别：${value.sex}</li>`;
+                }
+                btn.disabled = false;
+                mask.style.display = "none";
+                con.innerHTML = str+"</ul>";
+            })
+            }
+            setTimeout(af,3000);
+        }
+
+
+
+</script>
+</html>
